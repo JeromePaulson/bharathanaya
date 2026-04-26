@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import heroFoot from '../../assets/hero_foot.png'
+import heroFoot from '../../assets/hero_foot.webp'
 
 gsap.registerPlugin(ScrollTrigger)
 

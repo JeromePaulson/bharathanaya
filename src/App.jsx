@@ -19,9 +19,11 @@ export default function App() {
 
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.4,
+      duration: 2.2, // Increased duration for a much smoother, floaty scroll
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
+      wheelMultiplier: 0.85, // Slightly gentler mouse wheel speed
+      touchMultiplier: 1.5,
     })
     lenisRef.current = lenis
 

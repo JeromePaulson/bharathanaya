@@ -2,13 +2,13 @@ import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
-import g1 from '../../assets/gallery_1.png'
-import g2 from '../../assets/gallery_2.png'
-import g3 from '../../assets/gallery_3.png'
-import g4 from '../../assets/gallery_4.png'
-import g5 from '../../assets/gallery_5.png'
-import g6 from '../../assets/gallery_6.png'
-import g7 from '../../assets/gallery_7.png'
+import g1 from '../../assets/gallery_1.webp'
+import g2 from '../../assets/gallery_2.webp'
+import g3 from '../../assets/gallery_3.webp'
+import g4 from '../../assets/gallery_4.webp'
+import g5 from '../../assets/gallery_5.webp'
+import g6 from '../../assets/gallery_6.webp'
+import g7 from '../../assets/gallery_7.webp'
 
 gsap.registerPlugin(ScrollTrigger)
 
