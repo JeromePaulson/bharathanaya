@@ -4,5 +4,5 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: './', // Ensures relative paths in the built index.html
+  base: '/', // Netlify serves from the root domain, so '/' is best for SPA routing
 })
