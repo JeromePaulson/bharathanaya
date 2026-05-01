@@ -5,18 +5,20 @@ import React from 'react';
  * It uses an absolute positioned overlay to prevent direct interaction with the image.
  * This preserves SEO as the image tag remains in the DOM and is crawlable.
  */
-export default function ProtectedImage({ src, alt, className, style, watermark, ...props }) {
+export default function ProtectedImage({ src, alt, className, style, watermark, loading = 'lazy', ...props }) {
   return (
     <div
       className={`protected-image-container ${className || ''}`}
-      style={{ position: 'relative', display: 'inline-block', ...style }}
+      style={{ position: 'relative', display: 'inline-block', borderRadius: style?.borderRadius, overflow: style?.borderRadius ? 'hidden' : undefined, ...style }}
     >
       <img
         src={src}
         alt={alt}
         draggable={false}
+        loading={loading}
+        decoding="async"
         className="protected-image"
-        style={{ display: 'block', width: '100%', height: '100%', objectFit: style?.objectFit }}
+        style={{ display: 'block', width: '100%', height: 'auto', objectFit: style?.objectFit, borderRadius: style?.borderRadius }}
         {...props}
       />
       

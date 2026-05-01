@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
 import ProtectedImage from '../ProtectedImage'
 import heroFoot from '../../assets/hero_foot.webp'
 
@@ -45,13 +45,14 @@ function RhythmBar({ playing }) {
   )
 }
 
-const DUST_PARTICLES = Array.from({ length: 15 }).map(() => ({
+// Static dust particles — reduced to 8 for performance
+const DUST_PARTICLES = Array.from({ length: 8 }).map(() => ({
   left: `${Math.random() * 100}%`,
   top: `${Math.random() * 100}%`,
   size: Math.random() * 3 + 1,
   baseOpacity: Math.random() * 0.2 + 0.05,
   delay: Math.random() * 10,
-  duration: 15 + Math.random() * 15,
+  duration: 18 + Math.random() * 12,
   xMove: (Math.random() - 0.5) * 40,
   yMove: -40 - Math.random() * 60
 }));
@@ -60,24 +61,6 @@ const DUST_PARTICLES = Array.from({ length: 15 }).map(() => ({
 function HeroBackground() {
   return (
     <div className="hidden lg:block absolute inset-0 pointer-events-none z-[2] overflow-hidden">
-
-      {/* ── Floor perspective grid ── */}
-      <svg
-        className="absolute inset-0 w-full h-full"
-        viewBox="0 0 1440 900"
-        preserveAspectRatio="xMidYMid slice"
-        fill="none"
-        stroke="rgba(201,151,59,0.18)"
-        strokeWidth="1"
-      >
-        {[0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1].map((t, i) => (
-          <line key={`h${i}`} x1={720 - 720 * t} y1={900 * t} x2={720 + 720 * t} y2={900 * t} />
-        ))}
-        {[-6,-4,-3,-2,-1,0,1,2,3,4,6].map((slope, i) => (
-          <line key={`v${i}`} x1={720 + slope * 120} y1={900} x2={720 + slope * 720} y2={0} />
-        ))}
-        <line x1="0" y1="540" x2="1440" y2="540" strokeOpacity="0.3" />
-      </svg>
 
       {/* ── Top tala border ── */}
       <motion.svg
@@ -396,9 +379,11 @@ function HeroBackground() {
 
 // ─── Desktop Side Decorations ───
 function SideDecorations() {
+  const prefersReduced = useReducedMotion()
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
 
   useEffect(() => {
+    if (prefersReduced) return // skip mouse tracking when reduced motion preferred
     const handleMouseMove = (e) => {
       const x = (e.clientX / window.innerWidth) * 2 - 1
       const y = (e.clientY / window.innerHeight) * 2 - 1
@@ -628,8 +613,7 @@ export default function Hero() {
     offset: ["start start", "end start"]
   })
 
-  // Hero Parallax (subtle upward movement and gradual opacity fade)
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "40%"])
+  // Hero Parallax (subtle opacity fade, removed 'y' translation which causes massive scroll jank)
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
 
   useEffect(() => {
@@ -730,7 +714,7 @@ export default function Hero() {
       ref={sectionRef}
       id="home"
       className="hero-section relative"
-      style={{ cursor: 'none', y, opacity }}
+      style={{ cursor: 'none', opacity, willChange: 'opacity' }}
     >
       <HeroBackground />
       <SideDecorations />
@@ -775,7 +759,7 @@ export default function Hero() {
             zIndex: -1,
             background: 'linear-gradient(135deg, rgba(201,151,59,0.08), rgba(107,15,26,0.15))',
             border: '1px solid rgba(201,151,59,0.2)',
-            filter: 'drop-shadow(0 0 40px rgba(201,151,59,0.15))',
+            // Removed expensive filter: drop-shadow here since boxShadow provides the glow
           }}
           animate={{
             borderRadius: [
@@ -799,13 +783,15 @@ export default function Hero() {
         <ProtectedImage
           src={heroFoot}
           alt="Bharatanatyam dancer's ghungroo-adorned foot"
+          loading="eager"
           style={{
             width: 'min(460px, 80vw)',
             height: 'auto',
             objectFit: 'contain',
             borderRadius: '20px',
             overflow: 'hidden',
-            filter: 'drop-shadow(0 20px 60px rgba(107,15,26,0.6)) drop-shadow(0 0 30px rgba(201,151,59,0.2))',
+            // Reduced to a single drop-shadow for performance during scroll
+            filter: 'drop-shadow(0 20px 40px rgba(107,15,26,0.5))',
             userSelect: 'none',
           }}
         />
@@ -889,14 +875,14 @@ export default function Hero() {
 
         {/* Toggle + label row */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', pointerEvents: 'auto' }}>
-          <AudioToggle playing={audioPlaying} toggle={toggleAudio} />
+             <AudioToggle playing={audioPlaying} toggle={toggleAudio} />
           <p
             className="section-label"
             style={{ fontSize: 'clamp(0.45rem, 1.5vw, 0.6rem)', opacity: 0.5, letterSpacing: '0.2em', whiteSpace: 'nowrap' }}
           >
             TA — KA — DI — MI
           </p>
-           <AudioToggle playing={audioPlaying} toggle={toggleAudio} />
+          <AudioToggle playing={audioPlaying} toggle={toggleAudio} />
         </div>
       </div>
 

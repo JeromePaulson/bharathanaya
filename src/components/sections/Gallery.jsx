@@ -17,19 +17,19 @@ import g14 from '../../assets/devika_ajithkumar_gallery_14.webp'
 
 
 const photos = [
-  { src: g1, caption: 'Samarpanam — An offering from the soul.', alt: 'In devotion, every gesture becomes prayer.' },
+  { src: g10, caption: 'Rhythm of the anklets.', alt: 'Ghungroo adorning the feet.' },
   { src: g2, caption: 'Nritta in its purest rhythm', alt: 'Every beat held in balance' },
   { src: g3, caption: 'Leap of Devotion', alt: 'In silence, a thousand emotions unfold.' },
-  { src: g10, caption: 'Rhythm of the anklets.', alt: 'Ghungroo adorning the feet.' },
+  { src: g6, caption: 'Where posture becomes poetry.', alt: 'Every angle tells a story' },
+  { src: g1, caption: 'Samarpanam — An offering from the soul.', alt: 'In devotion, every gesture becomes prayer.' },
   { src: g14, caption: 'A timeless art.', alt: 'A beautiful silhouette.' },
   { src: g4, caption: 'Balance. Control. Presence', alt: 'A moment lifted, a feeling offered' },
-  { src: g5, caption: 'Abhinaya — where the dancer speaks.', alt: 'What the heart seeks, the hands reveal.' },
-  { src: g11, caption: 'Focus and discipline.', alt: 'Eyes tracing the movement.' },
   { src: g13, caption: 'Expressions of the soul.', alt: 'Facial expressions conveying the story.' },
-  { src: g6, caption: 'Where posture becomes poetry.', alt: 'Every angle tells a story' },
-  { src: g7, caption: 'In stillness, the deepest expressions arise', alt: 'With both hands, I offer and surrender.' },
   { src: g12, caption: 'The strength of tradition.', alt: 'A grounded stance.' },
+  { src: g7, caption: 'In stillness, the deepest expressions arise', alt: 'With both hands, I offer and surrender.' },
   { src: g8, caption: 'Grace in motion.', alt: 'A captivating pose.' },
+  { src: g11, caption: 'Focus and discipline.', alt: 'Eyes tracing the movement.' },
+  { src: g5, caption: 'Abhinaya — where the dancer speaks.', alt: 'What the heart seeks, the hands reveal.' },
 ]
 
 export default function Gallery() {
@@ -70,9 +70,6 @@ export default function Gallery() {
           <motion.div
             key={i}
             className="gallery-item"
-            style={{
-              minHeight: i === 0 || i === 3 ? '500px' : '240px',
-            }}
             initial={{ opacity: 0, scale: 0.88, y: 40 }}
             whileInView={{ opacity: 1, scale: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
