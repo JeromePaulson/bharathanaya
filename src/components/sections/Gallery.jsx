@@ -8,7 +8,6 @@ import g4 from '../../assets/devika_ajithkumar_gallery_4.webp'
 import g5 from '../../assets/devika_ajithkumar_gallery_5.webp'
 import g6 from '../../assets/devika_ajithkumar_gallery_6.webp'
 import g7 from '../../assets/devika_ajithkumar_gallery_7.webp'
-import g8 from '../../assets/devika_ajithkumar_gallery_8.webp'
 import g10 from '../../assets/devika_ajithkumar_gallery_10.webp'
 import g11 from '../../assets/devika_ajithkumar_gallery_11.webp'
 import g12 from '../../assets/devika_ajithkumar_gallery_12.webp'
@@ -18,18 +17,17 @@ import g14 from '../../assets/devika_ajithkumar_gallery_14.webp'
 
 const photos = [
   { src: g10, caption: 'Rhythm of the anklets.', alt: 'Ghungroo adorning the feet.' },
+  { src: g14, caption: 'A timeless art.', alt: 'A beautiful silhouette.' },
   { src: g2, caption: 'Nritta in its purest rhythm', alt: 'Every beat held in balance' },
   { src: g3, caption: 'Leap of Devotion', alt: 'In silence, a thousand emotions unfold.' },
-  { src: g6, caption: 'Where posture becomes poetry.', alt: 'Every angle tells a story' },
-  { src: g1, caption: 'Samarpanam — An offering from the soul.', alt: 'In devotion, every gesture becomes prayer.' },
-  { src: g14, caption: 'A timeless art.', alt: 'A beautiful silhouette.' },
-  { src: g4, caption: 'Balance. Control. Presence', alt: 'A moment lifted, a feeling offered' },
-  { src: g13, caption: 'Expressions of the soul.', alt: 'Facial expressions conveying the story.' },
-  { src: g12, caption: 'The strength of tradition.', alt: 'A grounded stance.' },
-  { src: g7, caption: 'In stillness, the deepest expressions arise', alt: 'With both hands, I offer and surrender.' },
-  { src: g8, caption: 'Grace in motion.', alt: 'A captivating pose.' },
-  { src: g11, caption: 'Focus and discipline.', alt: 'Eyes tracing the movement.' },
   { src: g5, caption: 'Abhinaya — where the dancer speaks.', alt: 'What the heart seeks, the hands reveal.' },
+  { src: g6, caption: 'Where posture becomes poetry.', alt: 'Every angle tells a story' },
+  { src: g4, caption: 'Balance. Control. Presence', alt: 'A moment lifted, a feeling offered' },
+  { src: g12, caption: 'The strength of tradition.', alt: 'A grounded stance.' },
+  { src: g13, caption: 'Expressions of the soul.', alt: 'Facial expressions conveying the story.' },
+  { src: g11, caption: 'Focus and discipline.', alt: 'Eyes tracing the movement.' },
+  { src: g7, caption: 'In stillness, the deepest expressions arise', alt: 'With both hands, I offer and surrender.' },
+  { src: g1, caption: 'Samarpanam — An offering from the soul.', alt: 'In devotion, every gesture becomes prayer.' },
 ]
 
 export default function Gallery() {
@@ -75,21 +73,23 @@ export default function Gallery() {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.9, delay: i * 0.07, ease: "easeOut" }}
           >
-            <ProtectedImage src={src} alt={alt} loading="lazy" />
-            <div className="gallery-overlay">
-              <p
-                style={{
-                  fontFamily: 'Cormorant Garamond, serif',
-                  fontSize: '1rem',
-                  fontStyle: 'italic',
-                  color: 'var(--gold-pale)',
-                  letterSpacing: '0.05em',
-                }}
-              >
-                {caption}
-              </p>
+            <div className="gallery-inner">
+              <ProtectedImage src={src} alt={alt} loading="lazy" />
+              <div className="gallery-overlay">
+                <p
+                  style={{
+                    fontFamily: 'Cormorant Garamond, serif',
+                    fontSize: '1rem',
+                    fontStyle: 'italic',
+                    color: 'var(--gold-pale)',
+                    letterSpacing: '0.05em',
+                  }}
+                >
+                  {caption}
+                </p>
+              </div>
+              <div className="gallery-glow" />
             </div>
-            <div className="gallery-glow" />
           </motion.div>
         ))}
       </div>

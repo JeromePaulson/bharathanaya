@@ -330,16 +330,46 @@ h1, h2, h3, h4 {
 
 .gallery-item {
   position: relative;
-  overflow: hidden;
   cursor: pointer;
   break-inside: avoid;
-  margin-bottom: 12px;
+  margin-bottom: 24px;
   display: inline-block;
   width: 100%;
+  
+  /* Museum-style Frame */
+  padding: 12px;
+  background: linear-gradient(135deg, var(--charcoal) 0%, #110e0a 100%);
+  border: 1px solid rgba(201, 151, 59, 0.2);
+  box-shadow: 
+    inset 0 0 0 1px #000,
+    inset 0 0 0 4px var(--charcoal),
+    inset 0 0 0 5px rgba(201, 151, 59, 0.3),
+    0 10px 25px rgba(0, 0, 0, 0.5);
+  border-radius: 3px;
+  transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.gallery-item:hover {
+  transform: translateY(-4px);
+  border-color: rgba(201, 151, 59, 0.5);
+  box-shadow: 
+    inset 0 0 0 1px #000,
+    inset 0 0 0 4px var(--charcoal),
+    inset 0 0 0 5px rgba(201, 151, 59, 0.6),
+    0 15px 35px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(201, 151, 59, 0.15);
+}
+
+.gallery-inner {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  border: 1px solid rgba(201, 151, 59, 0.15);
+  border-radius: 1px;
 }
 
 /* ProtectedImage container must fill the item */
-.gallery-item .protected-image-container {
+.gallery-inner .protected-image-container {
   width: 100%;
   height: 100%;
   display: block;
@@ -361,7 +391,7 @@ h1, h2, h3, h4 {
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(107, 15, 26, 0.7) 0%,
+    rgba(107, 15, 26, 0.8) 0%,
     transparent 50%
   );
   opacity: 0;
@@ -384,7 +414,7 @@ h1, h2, h3, h4 {
 }
 
 .gallery-item:hover .gallery-glow {
-  box-shadow: inset 0 0 0 1px rgba(201, 151, 59, 0.5), 0 0 30px rgba(201, 151, 59, 0.15);
+  box-shadow: inset 0 0 0 1px rgba(201, 151, 59, 0.4), 0 0 20px rgba(201, 151, 59, 0.15);
 }
 
 /* ─── Experience Section ─── */
