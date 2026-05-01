@@ -1,7 +1,5 @@
 import { useEffect, useRef } from 'react'
 import Lenis from '@studio-freight/lenis'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 import Cursor from './components/Cursor'
 import Navbar from './components/Navbar'
@@ -11,8 +9,6 @@ import Gallery from './components/sections/Gallery'
 import Experience from './components/sections/Experience'
 import Videos from './components/sections/Videos'
 import Contact from './components/sections/Contact'
-
-gsap.registerPlugin(ScrollTrigger)
 
 export default function App() {
   const lenisRef = useRef(null)
@@ -27,17 +23,17 @@ export default function App() {
     })
     lenisRef.current = lenis
 
-    // Connect Lenis with GSAP ticker
-    const rafCb = (time) => lenis.raf(time * 1000)
-    gsap.ticker.add(rafCb)
-    gsap.ticker.lagSmoothing(0)
-
-    // Update ScrollTrigger on lenis scroll
-    lenis.on('scroll', ScrollTrigger.update)
+    let rafId
+    function raf(time) {
+      lenis.raf(time)
+      rafId = requestAnimationFrame(raf)
+    }
+    
+    rafId = requestAnimationFrame(raf)
 
     return () => {
       lenis.destroy()
-      gsap.ticker.remove(rafCb)
+      cancelAnimationFrame(rafId)
     }
   }, [])
 

@@ -1,9 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import heroFoot from '../../assets/hero_foot.webp'
-
-gsap.registerPlugin(ScrollTrigger)
 
 // ─── Particle System ───
 function spawnParticles(canvas, cx, cy) {
@@ -79,14 +76,17 @@ export default function Hero() {
   const footRef = useRef(null)
   const canvasRef = useRef(null)
   const rippleRef = useRef(null)
-  const titleRef = useRef(null)
-  const subtitleRef = useRef(null)
-  const overlayTextRef = useRef(null)
-  const scrollHintRef = useRef(null)
 
   const [beats, setBeats] = useState(false)
-  const lastProgressRef = useRef(0)
-  const impactTriggeredRef = useRef(false)
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"]
+  })
+
+  // Hero Parallax (subtle upward movement and gradual opacity fade)
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "40%"])
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
 
   useEffect(() => {
     const section = sectionRef.current
@@ -102,115 +102,47 @@ export default function Hero() {
     resize()
     window.addEventListener('resize', resize)
 
-    // Initial entrance
-    gsap.set([titleRef.current, subtitleRef.current], { opacity: 0, y: 40 })
-    gsap.set(foot, { y: -30, rotateX: -20, transformPerspective: 800 })
+    // Simulate foot strike impact once on mount
+    const triggerImpact = () => {
+      ripple.animate([
+        { transform: 'translateX(-50%) scale(0)', opacity: 0.8 },
+        { transform: 'translateX(-50%) scale(5)', opacity: 0 }
+      ], { duration: 700, easing: 'ease-out', fill: 'forwards' })
 
-    gsap.to(foot, {
-      y: 0, rotateX: 0,
-      duration: 1.8, ease: 'power3.out', delay: 0.8
-    })
+      // Particles
+      const rect = canvas.getBoundingClientRect()
+      const footRect = foot.getBoundingClientRect()
+      const cx = footRect.left - rect.left + footRect.width / 2
+      const cy = footRect.bottom - rect.top
+      spawnParticles(canvas, cx, cy)
 
-    // Pinned scroll animation
-    const st = ScrollTrigger.create({
-      trigger: section,
-      start: 'top top',
-      end: '+=200%',
-      pin: true,
-      scrub: 0.8,
-      onUpdate: (self) => {
-        const progress = self.progress
+      // Beat flash
+      setBeats(true)
+      setTimeout(() => setBeats(false), 600)
+    }
 
-        // Phase 1 (0–0.35): foot lifts and comes down
-        if (progress < 0.35) {
-          const t = progress / 0.35
-          // Foot lifts up (0 → 0.5), then strikes down (0.5 → 1)
-          const liftPhase = t < 0.5 ? t * 2 : (1 - t) * 2
-          gsap.set(foot, {
-            y: -liftPhase * 60,
-            rotateX: liftPhase * 15,
-            transformPerspective: 800,
-          })
-        }
-
-        // Impact at progress ~0.35
-        if (progress >= 0.33 && progress < 0.38 && !impactTriggeredRef.current) {
-          impactTriggeredRef.current = true
-
-          // Ripple effect
-          gsap.fromTo(ripple,
-            { scale: 0, opacity: 0.8 },
-            { scale: 5, opacity: 0, duration: 0.7, ease: 'power2.out' }
-          )
-
-          // Particles
-          const rect = canvas.getBoundingClientRect()
-          const footRect = foot.getBoundingClientRect()
-          const cx = footRect.left - rect.left + footRect.width / 2
-          const cy = footRect.bottom - rect.top
-          spawnParticles(canvas, cx, cy)
-
-          // Beat flash
-          setBeats(true)
-          setTimeout(() => setBeats(false), 600)
-
-          // Title reveal
-          gsap.to(titleRef.current, {
-            opacity: 1, y: 0, duration: 1, ease: 'power3.out', delay: 0.1
-          })
-          gsap.to(subtitleRef.current, {
-            opacity: 1, y: 0, duration: 1, ease: 'power3.out', delay: 0.35
-          })
-        }
-
-        // Reset for second strike
-        if (progress >= 0.38) impactTriggeredRef.current = false
-
-        // Phase 2 (0.45–0.8): second strike, camera pull back
-        if (progress >= 0.45 && progress < 0.8) {
-          const t = (progress - 0.45) / 0.35
-          const liftPhase2 = t < 0.5 ? t * 2 : (1 - t) * 2
-          gsap.set(foot, {
-            y: -liftPhase2 * 45,
-            rotateX: liftPhase2 * 10,
-            scale: 1 - liftPhase2 * 0.04,
-            transformPerspective: 800,
-          })
-        }
-
-        // Phase 3 (0.8–1): fade out / transition
-        if (progress >= 0.8) {
-          const t = (progress - 0.8) / 0.2
-          gsap.set(section, { opacity: 1 - t * 0.4 })
-        }
-
-        lastProgressRef.current = progress
-      }
-    })
-
-    // Scroll hint disappears
-    gsap.to(scrollHintRef.current, {
-      opacity: 0,
-      scrollTrigger: {
-        trigger: section,
-        start: 'top+=5% top',
-        end: 'top+=15% top',
-        scrub: true,
-      }
-    })
+    // Foot initial entrance drop animation
+    const animation = foot.animate([
+      { transform: 'translateY(-60px) rotateX(-15deg)', offset: 0 },
+      { transform: 'translateY(0) rotateX(0deg)', offset: 1 }
+    ], { duration: 800, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)', fill: 'both', delay: 200 })
+    
+    animation.onfinish = () => {
+      triggerImpact()
+    }
 
     return () => {
-      st.kill()
       window.removeEventListener('resize', resize)
+      animation.cancel()
     }
   }, [])
 
   return (
-    <section
+    <motion.section
       ref={sectionRef}
       id="home"
       className="hero-section"
-      style={{ cursor: 'none' }}
+      style={{ cursor: 'none', y, opacity }}
     >
       {/* Stage lighting overlay */}
       <div className="hero-stage-light" />
@@ -288,22 +220,28 @@ export default function Hero() {
           padding: '0 2rem',
         }}
       >
-        <p ref={subtitleRef} className="section-label mb-3" style={{ opacity: 0 }}>
+        <motion.p 
+          className="section-label mb-3"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+        >
           Classical Bharatanatyam
-        </p>
-        <h1
-          ref={titleRef}
+        </motion.p>
+        <motion.h1
           className="font-serif"
           style={{
             fontSize: 'clamp(2.5rem, 6vw, 5rem)',
             color: 'var(--gold-pale)',
             letterSpacing: '0.05em',
-            opacity: 0,
             textShadow: '0 0 60px rgba(201,151,59,0.4)',
           }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
         >
           Devika Ajithkumar
-        </h1>
+        </motion.h1>
       </div>
 
       {/* Rhythm indicator */}
@@ -327,8 +265,7 @@ export default function Hero() {
       </div>
 
       {/* Scroll hint */}
-      <div
-        ref={scrollHintRef}
+      <motion.div
         style={{
           position: 'absolute',
           bottom: '4%',
@@ -338,10 +275,13 @@ export default function Hero() {
           alignItems: 'center',
           gap: '10px',
         }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 1.2 }}
       >
-        <span className="section-label" style={{ fontSize: '0.6rem', opacity: 0.5 }}>
+        {/* <span className="section-label" style={{ fontSize: '0.6rem', opacity: 0.5 }}>
           Scroll to begin
-        </span>
+        </span> */}
         <div
           style={{
             width: '1px',
@@ -350,10 +290,10 @@ export default function Hero() {
             animation: 'float 2s ease-in-out infinite',
           }}
         />
-      </div>
+      </motion.div>
 
       {/* Bottom fade to next section */}
       <div className="hero-footer-fade" />
-    </section>
+    </motion.section>
   )
 }

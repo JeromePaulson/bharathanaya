@@ -1,9 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Play, ExternalLink } from 'lucide-react'
-
-gsap.registerPlugin(ScrollTrigger)
 
 const videos = [
   {
@@ -101,66 +98,9 @@ function VideoPlaceholder({ video, isActive }) {
 
 export default function Videos() {
   const [activeIdx, setActiveIdx] = useState(0)
-  const sectionRef = useRef(null)
-  const titleRef = useRef(null)
-  const mainCardRef = useRef(null)
-  const thumbRefs = useRef([])
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(titleRef.current,
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1, y: 0, duration: 1, ease: 'power3.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 80%',
-            once: true,
-          }
-        }
-      )
-
-      gsap.fromTo(mainCardRef.current,
-        { opacity: 0, y: 40, scale: 0.97 },
-        {
-          opacity: 1, y: 0, scale: 1, duration: 1.2, ease: 'power3.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 70%',
-            once: true,
-          }
-        }
-      )
-
-      thumbRefs.current.forEach((el, i) => {
-        if (!el) return
-        gsap.fromTo(el,
-          { opacity: 0, x: 30 },
-          {
-            opacity: 1, x: 0, duration: 0.7, delay: i * 0.1, ease: 'power2.out',
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top 65%',
-              once: true,
-            }
-          }
-        )
-      })
-    }, sectionRef)
-
-    return () => ctx.revert()
-  }, [])
 
   const switchVideo = (idx) => {
-    gsap.to(mainCardRef.current, {
-      opacity: 0, scale: 0.97, duration: 0.2, ease: 'power2.in',
-      onComplete: () => {
-        setActiveIdx(idx)
-        gsap.to(mainCardRef.current, {
-          opacity: 1, scale: 1, duration: 0.4, ease: 'power2.out',
-        })
-      }
-    })
+    setActiveIdx(idx)
   }
 
   const active = videos[activeIdx]
@@ -168,11 +108,16 @@ export default function Videos() {
   return (
     <section
       id="videos"
-      ref={sectionRef}
       className="video-section py-28 px-6 md:px-12 lg:px-20"
     >
       {/* Header */}
-      <div ref={titleRef} className="text-center mb-16">
+      <motion.div 
+        className="text-center mb-16"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 1, ease: "easeOut" }}
+      >
         <p className="section-label mb-4">Performances</p>
         <h2
           className="font-serif"
@@ -185,57 +130,66 @@ export default function Videos() {
           Watch the <em style={{ color: 'var(--gold)' }}>Dance Live</em>
         </h2>
         <div className="gold-divider" />
-      </div>
+      </motion.div>
 
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
 
         {/* Featured video */}
-        <div ref={mainCardRef} className="lg:col-span-2 video-card rounded-sm overflow-hidden">
-          <VideoPlaceholder video={active} isActive />
+        <AnimatePresence mode="wait">
+          <motion.div 
+            key={active.id}
+            className="lg:col-span-2 video-card rounded-sm overflow-hidden"
+            initial={{ opacity: 0, y: 20, scale: 0.97 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.97, transition: { duration: 0.2 } }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
+            <VideoPlaceholder video={active} isActive />
 
-          <div className="p-6">
-            <h3
-              className="font-serif mb-2"
-              style={{ fontSize: '1.5rem', color: 'var(--gold-pale)' }}
-            >
-              {active.title}
-            </h3>
-            <p style={{
-              fontSize: '0.825rem', color: 'rgba(245,230,200,0.5)',
-              fontFamily: 'Inter, sans-serif', lineHeight: 1.7, marginBottom: '1rem'
-            }}>
-              {active.description}
-            </p>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span className="section-label" style={{ fontSize: '0.6rem' }}>
-                {active.venue}
-              </span>
-              <a
-                href={`https://youtube.com/watch?v=${active.youtubeId}`}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-2"
-                style={{
-                  fontSize: '0.7rem',
-                  color: 'var(--gold)',
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                  fontFamily: 'Inter, sans-serif',
-                  transition: 'color 0.3s',
-                }}
+            <div className="p-6">
+              <h3
+                className="font-serif mb-2"
+                style={{ fontSize: '1.5rem', color: 'var(--gold-pale)' }}
               >
-                Watch Full <ExternalLink size={12} />
-              </a>
+                {active.title}
+              </h3>
+              <p style={{
+                fontSize: '0.825rem', color: 'rgba(245,230,200,0.5)',
+                fontFamily: 'Inter, sans-serif', lineHeight: 1.7, marginBottom: '1rem'
+              }}>
+                {active.description}
+              </p>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span className="section-label" style={{ fontSize: '0.6rem' }}>
+                  {active.venue}
+                </span>
+                <a
+                  href={`https://youtube.com/watch?v=${active.youtubeId}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2"
+                  style={{
+                    fontSize: '0.7rem',
+                    color: 'var(--gold)',
+                    letterSpacing: '0.1em',
+                    textTransform: 'uppercase',
+                    fontFamily: 'Inter, sans-serif',
+                    transition: 'color 0.3s',
+                  }}
+                >
+                  Watch Full <ExternalLink size={12} />
+                </a>
+              </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </AnimatePresence>
 
         {/* Thumbnails sidebar */}
         <div className="flex flex-col gap-4">
           {videos.map((v, i) => (
-            <div
+            <motion.div
               key={v.id}
-              ref={el => thumbRefs.current[i] = el}
               className="video-card rounded-sm overflow-hidden cursor-pointer"
               style={{
                 border: i === activeIdx
@@ -244,6 +198,10 @@ export default function Videos() {
                 boxShadow: i === activeIdx ? '0 0 20px rgba(201,151,59,0.1)' : 'none',
               }}
               onClick={() => switchVideo(i)}
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.7, delay: i * 0.1, ease: "easeOut" }}
             >
               <div style={{ aspectRatio: '16/9', background: v.thumb, position: 'relative', overflow: 'hidden' }}>
                 <div style={{
@@ -273,7 +231,7 @@ export default function Videos() {
                   {v.venue}
                 </p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

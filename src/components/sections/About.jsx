@@ -1,9 +1,5 @@
-import { useEffect, useRef } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import dancerPortrait from '../../assets/dancer_portrait.webp'
-
-gsap.registerPlugin(ScrollTrigger)
+import { motion } from 'framer-motion'
+import dancerPortrait from '../../assets/devika_ajithkumar_dancer_portrait.webp'
 
 const bioLines = [
   'Born into a lineage of classical artists,',
@@ -20,91 +16,9 @@ const details = [
 ]
 
 export default function About() {
-  const sectionRef = useRef(null)
-  const imageRef = useRef(null)
-  const linesRef = useRef([])
-  const detailsRef = useRef([])
-  const titleRef = useRef(null)
-  const labelRef = useRef(null)
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Label + title
-      gsap.fromTo([labelRef.current, titleRef.current],
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1, y: 0,
-          duration: 1, stagger: 0.2, ease: 'power3.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 80%',
-            once: true,
-          }
-        }
-      )
-
-      // Bio lines stagger
-      gsap.fromTo(linesRef.current,
-        { opacity: 0, y: 20 },
-        {
-          opacity: 1, y: 0,
-          duration: 0.8, stagger: 0.18, ease: 'power2.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 70%',
-            once: true,
-          }
-        }
-      )
-
-      // Image parallax
-      gsap.fromTo(imageRef.current,
-        { y: 40, opacity: 0, scale: 0.97 },
-        {
-          y: 0, opacity: 1, scale: 1,
-          duration: 1.2, ease: 'power3.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 75%',
-            once: true,
-          }
-        }
-      )
-
-      // Parallax scroll effect on image
-      gsap.to(imageRef.current, {
-        y: -50,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: true,
-        }
-      })
-
-      // Details
-      gsap.fromTo(detailsRef.current,
-        { opacity: 0, x: -20 },
-        {
-          opacity: 1, x: 0,
-          duration: 0.6, stagger: 0.1, ease: 'power2.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 55%',
-            once: true,
-          }
-        }
-      )
-    }, sectionRef)
-
-    return () => ctx.revert()
-  }, [])
-
   return (
     <section
       id="about"
-      ref={sectionRef}
       className="about-section py-32 px-6 md:px-16 lg:px-24"
     >
       <div className="temple-texture" />
@@ -139,7 +53,14 @@ export default function About() {
 
           {/* Image column */}
           <div className="order-2 lg:order-1">
-            <div ref={imageRef} className="about-image-wrap" style={{ maxWidth: '460px' }}>
+            <motion.div 
+              className="about-image-wrap" 
+              style={{ maxWidth: '460px' }}
+              initial={{ y: 40, opacity: 0, scale: 0.97 }}
+              whileInView={{ y: 0, opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 1.2, ease: "easeOut" }}
+            >
               <img
                 src={dancerPortrait}
                 alt="Devika Ajithkumar – Bharatanatyam dancer"
@@ -164,52 +85,69 @@ export default function About() {
                 borderBottom: '1px solid var(--gold)',
                 borderRight: '1px solid var(--gold)',
               }} />
-            </div>
+            </motion.div>
           </div>
 
           {/* Text column */}
           <div className="order-1 lg:order-2">
-            <p ref={labelRef} className="section-label mb-4">About the Artist</p>
+            <motion.p 
+              className="section-label mb-4"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 1, ease: "easeOut" }}
+            >
+              About the Artist
+            </motion.p>
 
-            <h2
-              ref={titleRef}
+            <motion.h2
               className="font-serif mb-2"
               style={{
                 fontSize: 'clamp(2.2rem, 4vw, 3.5rem)',
                 color: 'var(--gold-pale)',
                 letterSpacing: '0.02em',
               }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
             >
               A Story Told<br />
               <em style={{ color: 'var(--gold)' }}>in Motion</em>
-            </h2>
+            </motion.h2>
 
             <div className="gold-divider" style={{ margin: '1.5rem 0' }} />
 
             {/* Bio */}
             <div className="mb-10" style={{ lineHeight: 2 }}>
               {bioLines.map((line, i) => (
-                <p
+                <motion.p
                   key={i}
-                  ref={el => linesRef.current[i] = el}
                   style={{
                     fontSize: '1.05rem',
                     color: 'rgba(245,230,200,0.8)',
                     fontFamily: 'Cormorant Garamond, serif',
                     fontStyle: i === 2 ? 'italic' : 'normal',
                   }}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.8, delay: i * 0.18, ease: "easeOut" }}
                 >
                   {line}
-                </p>
+                </motion.p>
               ))}
             </div>
 
             {/* Detail grid */}
             <div className="grid grid-cols-2 gap-x-8 gap-y-5">
               {details.map(({ label, value }, i) => (
-                <div
+                <motion.div
                   key={label}
-                  ref={el => detailsRef.current[i] = el}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.6, delay: i * 0.1, ease: "easeOut" }}
                 >
                   <p className="section-label mb-1" style={{ fontSize: '0.6rem' }}>{label}</p>
                   <p style={{
@@ -218,7 +156,7 @@ export default function About() {
                     fontFamily: 'Inter, sans-serif',
                     fontWeight: 300,
                   }}>{value}</p>
-                </div>
+                </motion.div>
               ))}
             </div>
 

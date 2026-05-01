@@ -593,6 +593,14 @@ h1, h2, h3, h4 {
 /* ─── Mobile adjustments ─── */
 @media (max-width: 768px) {
   .hero-stage-light { width: 100%; }
-  .timeline-card { margin-left: 40px !important; margin-right: 0 !important; }
-  .timeline-dot { left: -26px !important; right: auto !important; }
+  .timeline-card { 
+    margin-left: 40px !important; 
+    margin-right: 0 !important; 
+    width: calc(100% - 40px) !important;
+  }
+  .timeline-dot { 
+    left: 20px !important; 
+    right: auto !important; 
+    transform: translateX(-50%) translateY(-50%) !important;
+  }
 }

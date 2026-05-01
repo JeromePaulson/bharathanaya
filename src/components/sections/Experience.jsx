@@ -1,9 +1,5 @@
-import { useEffect, useRef } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { motion } from 'framer-motion'
 import { Award, Star, MapPin, Calendar } from 'lucide-react'
-
-gsap.registerPlugin(ScrollTrigger)
 
 const events = [
   {
@@ -45,68 +41,19 @@ const typeLabels = {
 }
 
 export default function Experience() {
-  const sectionRef = useRef(null)
-  const titleRef = useRef(null)
-  const lineRef = useRef(null)
-  const cardRefs = useRef([])
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(titleRef.current,
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1, y: 0, duration: 1, ease: 'power3.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 80%',
-            once: true,
-          }
-        }
-      )
-
-      // Animate timeline line drawing
-      gsap.fromTo(lineRef.current,
-        { scaleY: 0, transformOrigin: 'top center' },
-        {
-          scaleY: 1, duration: 2, ease: 'power2.inOut',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 70%',
-            once: true,
-          }
-        }
-      )
-
-      // Cards stagger
-      cardRefs.current.forEach((el, i) => {
-        if (!el) return
-        const fromLeft = i % 2 === 0
-        gsap.fromTo(el,
-          { opacity: 0, x: fromLeft ? -50 : 50, y: 20 },
-          {
-            opacity: 1, x: 0, y: 0,
-            duration: 0.85, ease: 'power3.out',
-            scrollTrigger: {
-              trigger: el,
-              start: 'top 85%',
-              once: true,
-            }
-          }
-        )
-      })
-    }, sectionRef)
-
-    return () => ctx.revert()
-  }, [])
-
   return (
     <section
       id="experience"
-      ref={sectionRef}
       className="experience-section py-28 px-6 md:px-12 lg:px-20"
     >
       {/* Header */}
-      <div ref={titleRef} className="text-center mb-20">
+      <motion.div 
+        className="text-center mb-20"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 1, ease: "easeOut" }}
+      >
         <p className="section-label mb-4">Journey</p>
         <h2
           className="font-serif"
@@ -120,11 +67,17 @@ export default function Experience() {
           <em style={{ color: 'var(--gold)' }}>in Rhythm</em>
         </h2>
         <div className="gold-divider" />
-      </div>
+      </motion.div>
 
       {/* Timeline */}
       <div className="max-w-5xl mx-auto relative" style={{ minHeight: '600px' }}>
-        <div ref={lineRef} className="timeline-line" />
+        <motion.div 
+          className="timeline-line" 
+          initial={{ scaleY: 0, transformOrigin: 'top center' }}
+          whileInView={{ scaleY: 1 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 2, ease: "easeInOut" }}
+        />
 
         <div className="flex flex-col gap-12">
           {events.map((event, i) => {
@@ -137,14 +90,17 @@ export default function Experience() {
                   justifyContent: isLeft ? 'flex-start' : 'flex-end',
                 }}
               >
-                <div
-                  ref={el => cardRefs.current[i] = el}
+                <motion.div
                   className="timeline-card p-7 rounded-sm"
                   style={{
                     width: 'min(45%, 380px)',
                     marginLeft: isLeft ? 0 : 'auto',
                     marginRight: isLeft ? 'auto' : 0,
                   }}
+                  initial={{ opacity: 0, x: isLeft ? -50 : 50, y: 20 }}
+                  whileInView={{ opacity: 1, x: 0, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.85, delay: i * 0.1, ease: "easeOut" }}
                 >
                   {/* Year */}
                   <p
@@ -204,7 +160,7 @@ export default function Experience() {
                   }}>
                     {event.description}
                   </p>
-                </div>
+                </motion.div>
 
                 {/* Timeline dot */}
                 <div

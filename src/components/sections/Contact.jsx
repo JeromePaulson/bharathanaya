@@ -1,8 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useState } from 'react'
+import { motion } from 'framer-motion'
 import { Camera, Video, Briefcase, MessageCircle, Send, Mail, Phone, MapPin } from 'lucide-react'
-gsap.registerPlugin(ScrollTrigger)
 
 const socials = [
   { icon: Camera, label: 'Instagram', href: 'https://instagram.com/devika_ajithkumar' },
@@ -12,55 +10,16 @@ const socials = [
 ]
 
 export default function Contact() {
-  const sectionRef = useRef(null)
-  const formRef = useRef(null)
-  const infoRef = useRef(null)
-  const titleRef = useRef(null)
   const [submitted, setSubmitted] = useState(false)
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(titleRef.current,
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1, y: 0, duration: 1, ease: 'power3.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 80%',
-            once: true,
-          }
-        }
-      )
-
-      gsap.fromTo([formRef.current, infoRef.current],
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1, y: 0, duration: 0.9, stagger: 0.15, ease: 'power3.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 70%',
-            once: true,
-          }
-        }
-      )
-    }, sectionRef)
-
-    return () => ctx.revert()
-  }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault()
     setSubmitted(true)
-    gsap.fromTo('.success-msg',
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }
-    )
   }
 
   return (
     <section
       id="contact"
-      ref={sectionRef}
       className="contact-section py-28 px-6 md:px-12 lg:px-20"
     >
       {/* Decorative background text */}
@@ -85,7 +44,13 @@ export default function Contact() {
       </p>
 
       {/* Header */}
-      <div ref={titleRef} className="text-center mb-16 relative z-10">
+      <motion.div 
+        className="text-center mb-16 relative z-10"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 1, ease: "easeOut" }}
+      >
         <p className="section-label mb-4">Get in Touch</p>
         <h2
           className="font-serif"
@@ -109,12 +74,18 @@ export default function Contact() {
           Whether for a performance booking, workshop, or collaboration — 
           every journey begins with a single step.
         </p>
-      </div>
+      </motion.div>
 
       <div className="max-w-5xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-5 gap-16">
 
         {/* Form */}
-        <div ref={formRef} className="lg:col-span-3">
+        <motion.div 
+          className="lg:col-span-3"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.9, ease: "easeOut" }}
+        >
           {!submitted ? (
             <form className="contact-form" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-8">
@@ -165,13 +136,16 @@ export default function Contact() {
               </button>
             </form>
           ) : (
-            <div
+            <motion.div
               className="success-msg"
               style={{
                 padding: '3rem',
                 border: '1px solid rgba(201,151,59,0.3)',
                 textAlign: 'center',
               }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
             >
               <div style={{
                 width: 60, height: 60,
@@ -191,12 +165,18 @@ export default function Contact() {
               <p style={{ color: 'rgba(245,230,200,0.5)', fontSize: '0.875rem', fontFamily: 'Inter' }}>
                 Thank you for reaching out. I will respond within 2–3 business days.
               </p>
-            </div>
+            </motion.div>
           )}
-        </div>
+        </motion.div>
 
         {/* Info sidebar */}
-        <div ref={infoRef} className="lg:col-span-2 flex flex-col justify-between">
+        <motion.div 
+          className="lg:col-span-2 flex flex-col justify-between"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.9, delay: 0.15, ease: "easeOut" }}
+        >
 
           <div className="space-y-8">
             {/* Contact details */}
@@ -250,7 +230,7 @@ export default function Contact() {
               ))}
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Footer */}
