@@ -875,7 +875,7 @@ export default function Hero() {
 
         {/* Toggle + label row */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', pointerEvents: 'auto' }}>
-             <AudioToggle playing={audioPlaying} toggle={toggleAudio} />
+          <AudioToggle playing={audioPlaying} toggle={toggleAudio} />
           <p
             className="section-label"
             style={{ fontSize: 'clamp(0.45rem, 1.5vw, 0.6rem)', opacity: 0.5, letterSpacing: '0.2em', whiteSpace: 'nowrap' }}
