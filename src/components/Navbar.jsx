@@ -5,7 +5,7 @@ const navItems = [
   { label: 'About', href: '#about' },
   { label: 'Gallery', href: '#gallery' },
   { label: 'Experience', href: '#experience' },
-  { label: 'Videos', href: '#videos' },
+  // { label: 'Videos', href: '#videos' },
   { label: 'Contact', href: '#contact' },
 ]
 
