@@ -57,6 +57,14 @@ h1, h2, h3, h4 {
   color: var(--gold-light);
 }
 
+/* ─── Content Protection ─── */
+.protected-text {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
 /* ─── Cursor ─── */
 .custom-cursor {
   position: fixed;

@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react'
 import Lenis from '@studio-freight/lenis'
 
+import { useDisableRightClick } from './hooks/useDisableRightClick'
+
 import Cursor from './components/Cursor'
 import Navbar from './components/Navbar'
 import Hero from './components/sections/Hero'
@@ -12,6 +14,9 @@ import Contact from './components/sections/Contact'
 
 export default function App() {
   const lenisRef = useRef(null)
+  
+  // Enable global content protection
+  useDisableRightClick()
 
   useEffect(() => {
     const lenis = new Lenis({

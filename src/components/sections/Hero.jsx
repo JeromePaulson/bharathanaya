@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
+import ProtectedImage from '../ProtectedImage'
 import heroFoot from '../../assets/hero_foot.webp'
 
 // ─── Particle System ───
@@ -173,7 +174,7 @@ export default function Hero() {
         className="foot-container"
         style={{ willChange: 'transform' }}
       >
-        <img
+        <ProtectedImage
           src={heroFoot}
           alt="Bharatanatyam dancer's ghungroo-adorned foot"
           style={{
@@ -183,7 +184,6 @@ export default function Hero() {
             filter: 'drop-shadow(0 20px 60px rgba(107,15,26,0.6)) drop-shadow(0 0 30px rgba(201,151,59,0.2))',
             userSelect: 'none',
           }}
-          draggable={false}
         />
 
         {/* Floor ripple ring */}
@@ -219,6 +219,7 @@ export default function Hero() {
           width: '100%',
           padding: '0 2rem',
         }}
+        className="protected-text"
       >
         <motion.p 
           className="section-label mb-3"

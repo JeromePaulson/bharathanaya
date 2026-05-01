@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import ProtectedImage from '../ProtectedImage'
 import dancerPortrait from '../../assets/devika_ajithkumar_dancer_portrait.webp'
 
 const bioLines = [
@@ -61,7 +62,7 @@ export default function About() {
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 1.2, ease: "easeOut" }}
             >
-              <img
+              <ProtectedImage
                 src={dancerPortrait}
                 alt="Devika Ajithkumar – Bharatanatyam dancer"
                 className="w-full block"
@@ -71,6 +72,7 @@ export default function About() {
                   filter: 'contrast(1.05) brightness(0.95)',
                 }}
                 loading="lazy"
+                watermark="Devika Ajithkumar"
               />
               {/* Corner accents */}
               <div style={{
@@ -89,7 +91,7 @@ export default function About() {
           </div>
 
           {/* Text column */}
-          <div className="order-1 lg:order-2">
+          <div className="order-1 lg:order-2 protected-text">
             <motion.p 
               className="section-label mb-4"
               initial={{ opacity: 0, y: 30 }}

@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import ProtectedImage from '../ProtectedImage'
 
 import g1 from '../../assets/devika_ajithkumar_gallery_1.webp'
 import g2 from '../../assets/devika_ajithkumar_gallery_2.webp'
@@ -77,7 +78,7 @@ export default function Gallery() {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.9, delay: i * 0.07, ease: "easeOut" }}
           >
-            <img src={src} alt={alt} loading="lazy" />
+            <ProtectedImage src={src} alt={alt} loading="lazy" />
             <div className="gallery-overlay">
               <p
                 style={{

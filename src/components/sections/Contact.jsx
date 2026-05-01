@@ -171,7 +171,7 @@ export default function Contact() {
 
         {/* Info sidebar */}
         <motion.div 
-          className="lg:col-span-2 flex flex-col justify-between"
+          className="lg:col-span-2 flex flex-col justify-between mt-12 lg:mt-0 gap-10 lg:gap-0"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
