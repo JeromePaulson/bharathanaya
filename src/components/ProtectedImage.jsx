@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 /**
  * A wrapper for the <img> tag that deters right-clicking and drag/drop.
@@ -6,10 +6,18 @@ import React from 'react';
  * This preserves SEO as the image tag remains in the DOM and is crawlable.
  */
 export default function ProtectedImage({ src, alt, className, style, watermark, loading = 'lazy', ...props }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+
   return (
     <div
-      className={`protected-image-container ${className || ''}`}
-      style={{ position: 'relative', display: 'inline-block', borderRadius: style?.borderRadius, overflow: style?.borderRadius ? 'hidden' : undefined, ...style }}
+      className={`protected-image-container ${isLoaded ? 'loaded' : 'skeleton-pulse'} ${className || ''}`}
+      style={{ 
+        position: 'relative', 
+        display: 'inline-block', 
+        borderRadius: style?.borderRadius, 
+        overflow: 'hidden', 
+        ...style 
+      }}
     >
       <img
         src={src}
@@ -17,8 +25,17 @@ export default function ProtectedImage({ src, alt, className, style, watermark, 
         draggable={false}
         loading={loading}
         decoding="async"
+        onLoad={() => setIsLoaded(true)}
         className="protected-image"
-        style={{ display: 'block', width: '100%', height: 'auto', objectFit: style?.objectFit, borderRadius: style?.borderRadius }}
+        style={{ 
+          display: 'block', 
+          width: '100%', 
+          height: 'auto', 
+          objectFit: style?.objectFit, 
+          borderRadius: style?.borderRadius,
+          opacity: isLoaded ? 1 : 0,
+          transition: 'opacity 0.7s ease'
+        }}
         {...props}
       />
       

@@ -705,7 +705,7 @@ export default function Hero() {
         } else {
           clearInterval(fadeInterval);
         }
-      }, 100);
+      }, 300);
     }
   }
 
@@ -886,33 +886,7 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Scroll hint */}
-      <motion.div
-        style={{
-          position: 'absolute',
-          bottom: '4%',
-          right: '6%',
-          zIndex: 6,
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px',
-        }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 1.2 }}
-      >
-        {/* <span className="section-label" style={{ fontSize: '0.6rem', opacity: 0.5 }}>
-          Scroll to begin
-        </span> */}
-        <div
-          style={{
-            width: '1px',
-            height: '40px',
-            background: 'linear-gradient(to bottom, rgba(201,151,59,0.6), transparent)',
-            animation: 'float 2s ease-in-out infinite',
-          }}
-        />
-      </motion.div>
+   
 
       {/* Bottom fade to next section */}
       <div className="hero-footer-fade" />
