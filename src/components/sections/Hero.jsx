@@ -224,28 +224,6 @@ function HeroBackground() {
         </motion.svg>
       ))}
 
-      {/* ── Mid horizontal frieze ── */}
-      <motion.svg
-        className="absolute left-0 w-full"
-        style={{ top: '50%', transform: 'translateY(-50%)' }}
-        viewBox="0 0 1440 40"
-        fill="none"
-        stroke="rgba(201,151,59,0.25)"
-        strokeWidth="1"
-        animate={{ opacity: [0.5, 1, 0.5] }}
-        transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
-      >
-        {Array.from({ length: 72 }).map((_, i) => (
-          <g key={i} transform={`translate(${i * 20}, 20)`}>
-            <path d="M10 18 Q10 8 10 4 Q10 8 10 18" />
-            <path d="M10 16 Q6 10 6 4 Q10 8 10 16" />
-            <path d="M10 16 Q14 10 14 4 Q10 8 10 16" />
-            <circle cx="10" cy="20" r="2" />
-          </g>
-        ))}
-        <line x1="0" y1="2" x2="1440" y2="2" strokeDasharray="2 6" />
-        <line x1="0" y1="38" x2="1440" y2="38" strokeDasharray="2 6" />
-      </motion.svg>
 
       {/* ── Inner lotus chains — Left ── */}
       <motion.svg
@@ -478,18 +456,7 @@ function SideDecorations() {
             <circle cx="200" cy="50" r="5" />
           </motion.svg>
 
-          {/* Layer 3: Inner Motif (Mudra) */}
-          <motion.svg 
-            viewBox="0 0 100 100" fill="none" stroke="var(--gold-light)" strokeWidth="1.5" 
-            className="absolute w-[20%] h-[20%]"
-            style={{ opacity: 0.1 }}
-            animate={{ opacity: [0.05, 0.12, 0.05], y: [-2, 2, -2] }}
-            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <path d="M40 80 Q30 60 40 40 Q50 20 60 40 Q70 60 60 80 Z" />
-            <path d="M35 70 Q20 50 25 30 Q35 10 45 35" />
-            <path d="M65 70 Q80 50 75 30 Q65 10 55 35" />
-          </motion.svg>
+ 
 
         </div>
       </motion.div>
@@ -534,18 +501,6 @@ function SideDecorations() {
             <path d="M 70 600 L 70 300 C 70 120, 200 80, 200 50 C 200 80, 330 120, 330 300 L 330 600" />
             <circle cx="200" cy="20" r="8" />
             <circle cx="200" cy="50" r="5" />
-          </motion.svg>
-
-          {/* Layer 3: Inner Motif (Dancer Silhouette) */}
-          <motion.svg 
-            viewBox="0 0 100 100" fill="none" stroke="var(--gold-light)" strokeWidth="1.5" 
-            className="absolute w-[20%] h-[20%]"
-            style={{ opacity: 0.1 }}
-            animate={{ opacity: [0.05, 0.12, 0.05], y: [2, -2, 2] }}
-            transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-          >
-            <circle cx="50" cy="20" r="6" />
-            <path d="M50 26 L50 55 M50 55 L35 75 L20 75 M50 55 L65 75 L80 75 M30 40 Q50 35 70 40 M30 40 L20 20 M70 40 L80 20" />
           </motion.svg>
 
         </div>

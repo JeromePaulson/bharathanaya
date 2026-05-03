@@ -304,117 +304,349 @@ h1, h2, h3, h4 {
   pointer-events: none;
 }
 
-/* ─── Gallery Section ─── */
-.gallery-section {
+/* ─── 3D Coverflow Gallery ─── */
+.coverflow-section {
+  --coverflow-spread: 300px;
+  --coverflow-gap: 110px;
+  --coverflow-z-base: -100px;
+  --coverflow-z-gap: -60px;
+  --coverflow-active-z: 80px;
+
   position: relative;
   background: var(--stage-dark);
   overflow: hidden;
+  padding: 6rem 0 4rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.gallery-grid {
-  column-count: 3;
-  column-gap: 12px;
+/* Spotlight ambient glow */
+.coverflow-spotlight {
+  position: absolute;
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at 50% 20%,
+    rgba(201, 151, 59, 0.1) 0%,
+    rgba(107, 15, 26, 0.05) 35%,
+    transparent 65%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.coverflow-header {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 2rem;
+  padding: 0 1.5rem;
+}
+
+/* ─── Perspective Viewport ─── */
+.coverflow-viewport {
+  position: relative;
+  width: 100%;
+  z-index: 1;
+  padding-bottom: 8rem;
+}
+
+.coverflow-stage {
+  position: relative;
+  width: 100%;
+  height: 460px;
+  perspective: 1000px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+}
+
+/* ─── Individual Coverflow Item ─── */
+.coverflow-item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 280px;
+  height: 380px;
+  margin-left: -140px;  /* half of width */
+  margin-top: -190px;   /* half of height */
+  cursor: pointer;
+  outline: none;
+  transition:
+    transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1),
+    opacity 0.7s cubic-bezier(0.25, 0.1, 0.25, 1),
+    filter 0.7s cubic-bezier(0.25, 0.1, 0.25, 1);
+  transform-style: preserve-3d;
+}
+
+.coverflow-item:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 6px;
+}
+
+/* ─── Image Card ─── */
+.coverflow-image-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(201, 151, 59, 0.12);
+  transition:
+    box-shadow 0.7s cubic-bezier(0.25, 0.1, 0.25, 1),
+    border-color 0.7s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* Active state styling */
+.coverflow-item--active .coverflow-image-wrap {
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.9),
+    0 0 50px rgba(201, 151, 59, 0.1);
+  border-color: rgba(201, 151, 59, 0.35);
+}
+
+.coverflow-image-wrap .protected-image-container {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+}
+
+.coverflow-image-wrap img.protected-image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block;
+}
+
+/* ─── Reflection ─── */
+.coverflow-reflection {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 50%;
+  overflow: hidden;
+  pointer-events: none;
+  transform: scaleY(-1);
+  mask-image: linear-gradient(to top, transparent 40%, rgba(0, 0, 0, 0.3) 100%);
+  -webkit-mask-image: linear-gradient(to top, transparent 40%, rgba(0, 0, 0, 0.3) 100%);
+  opacity: 0.25;
+}
+
+.coverflow-reflection img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  filter: blur(2px) brightness(0.35);
+}
+
+/* ─── Glass Floor ─── */
+.coverflow-floor {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(18, 14, 10, 0.4) 40%,
+    var(--stage-dark) 100%
+  );
+  pointer-events: none;
+  z-index: 25;
+}
+
+.coverflow-floor::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 15%;
+  right: 15%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(201, 151, 59, 0.12) 30%,
+    rgba(201, 151, 59, 0.2) 50%,
+    rgba(201, 151, 59, 0.12) 70%,
+    transparent 100%
+  );
+}
+
+/* ─── Caption ─── */
+.coverflow-caption {
+  position: absolute;
+  top: calc(100% + 16px);
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  width: max-content;
+  max-width: 300px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.5s ease 0.15s, transform 0.5s ease 0.15s;
+  pointer-events: none;
+  z-index: 30;
+}
+
+.coverflow-caption.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.coverflow-caption-text {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1rem;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--gold-pale);
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+/* ─── Navigation Arrows ─── */
+.coverflow-nav {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+  position: relative;
+  z-index: 30;
+}
+
+.coverflow-arrow {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 151, 59, 0.3);
+  background: rgba(18, 14, 10, 0.6);
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+}
+
+.coverflow-arrow:hover:not(:disabled) {
+  border-color: var(--gold);
+  background: rgba(201, 151, 59, 0.1);
+  color: var(--gold-light);
+  box-shadow: 0 0 20px rgba(201, 151, 59, 0.15);
+}
+
+.coverflow-arrow:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+/* ─── Indicator Dots ─── */
+.coverflow-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 1.5rem;
+  position: relative;
+  z-index: 30;
+}
+
+.coverflow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(201, 151, 59, 0.2);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.4s ease;
+}
+
+.coverflow-dot.active {
+  background: var(--gold);
+  box-shadow: 0 0 8px rgba(201, 151, 59, 0.5);
+  transform: scale(1.4);
+}
+
+.coverflow-dot:hover:not(.active) {
+  background: rgba(201, 151, 59, 0.5);
+}
+
+/* ─── Coverflow Responsive ─── */
+@media (max-width: 1024px) {
+  .coverflow-section {
+    --coverflow-spread: 240px;
+    --coverflow-gap: 90px;
+  }
+  .coverflow-stage {
+    height: 400px;
+  }
+  .coverflow-item {
+    width: 240px;
+    height: 330px;
+    margin-left: -120px;
+    margin-top: -165px;
+  }
 }
 
 @media (max-width: 768px) {
-  .gallery-grid {
-    column-count: 2;
+  .coverflow-section {
+    --coverflow-spread: 180px;
+    --coverflow-gap: 70px;
+    --coverflow-active-z: 60px;
+    padding: 4rem 0 3rem;
+  }
+  .coverflow-stage {
+    height: 340px;
+    perspective: 800px;
+  }
+  .coverflow-item {
+    width: 200px;
+    height: 280px;
+    margin-left: -100px;
+    margin-top: -140px;
+  }
+  .coverflow-nav {
+    margin-top: 3rem;
   }
 }
 
 @media (max-width: 480px) {
-  .gallery-grid {
-    column-count: 1;
+  .coverflow-section {
+    --coverflow-spread: 130px;
+    --coverflow-gap: 50px;
+    --coverflow-active-z: 40px;
+    padding: 3rem 0 2rem;
   }
-}
-
-.gallery-item {
-  position: relative;
-  cursor: pointer;
-  break-inside: avoid;
-  margin-bottom: 24px;
-  display: inline-block;
-  width: 100%;
-  
-  /* Museum-style Frame */
-  padding: 12px;
-  background: linear-gradient(135deg, var(--charcoal) 0%, #110e0a 100%);
-  border: 1px solid rgba(201, 151, 59, 0.2);
-  box-shadow: 
-    inset 0 0 0 1px #000,
-    inset 0 0 0 4px var(--charcoal),
-    inset 0 0 0 5px rgba(201, 151, 59, 0.3),
-    0 10px 25px rgba(0, 0, 0, 0.5);
-  border-radius: 3px;
-  transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
-}
-
-.gallery-item:hover {
-  transform: translateY(-4px);
-  border-color: rgba(201, 151, 59, 0.5);
-  box-shadow: 
-    inset 0 0 0 1px #000,
-    inset 0 0 0 4px var(--charcoal),
-    inset 0 0 0 5px rgba(201, 151, 59, 0.6),
-    0 15px 35px rgba(0, 0, 0, 0.8),
-    0 0 20px rgba(201, 151, 59, 0.15);
-}
-
-.gallery-inner {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  border: 1px solid rgba(201, 151, 59, 0.15);
-  border-radius: 1px;
-}
-
-/* ProtectedImage container must fill the item */
-.gallery-inner .protected-image-container {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.gallery-item img {
-  width: 100%;
-  height: auto;
-  display: block;
-  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.gallery-item:hover img {
-  transform: scale(1.06);
-}
-
-.gallery-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(107, 15, 26, 0.8) 0%,
-    transparent 50%
-  );
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  display: flex;
-  align-items: flex-end;
-  padding: 1.5rem;
-}
-
-.gallery-item:hover .gallery-overlay {
-  opacity: 1;
-}
-
-.gallery-glow {
-  position: absolute;
-  inset: 0;
-  box-shadow: inset 0 0 0 1px rgba(201, 151, 59, 0);
-  transition: box-shadow 0.4s ease;
-  pointer-events: none;
-}
-
-.gallery-item:hover .gallery-glow {
-  box-shadow: inset 0 0 0 1px rgba(201, 151, 59, 0.4), 0 0 20px rgba(201, 151, 59, 0.15);
+  .coverflow-stage {
+    height: 300px;
+    perspective: 600px;
+  }
+  .coverflow-item {
+    width: 160px;
+    height: 230px;
+    margin-left: -80px;
+    margin-top: -115px;
+  }
+  .coverflow-caption-text {
+    font-size: 0.85rem;
+  }
+  .coverflow-arrow {
+    width: 40px;
+    height: 40px;
+  }
+  .coverflow-viewport {
+    padding-bottom: 9rem;
+  }
+  .coverflow-nav {
+    margin-top: 2rem;
+  }
 }
 
 /* ─── Experience Section ─── */

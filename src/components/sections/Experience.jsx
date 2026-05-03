@@ -15,7 +15,7 @@ const events = [
     title: 'Kalamandalam',
     venue: 'Mookambika Temple, Kollur',
     type: ' group performance',
-    description: 'A mesmerizing performance of Bharatanatyam, showcasing the classical dance form\'s grace and storytelling.',
+    description: 'A mesmerizing performance of Bharatanatyam, dedicated to Goddess Mookambika',
     award: false,
   },
   {
@@ -23,7 +23,7 @@ const events = [
     title: 'Margazhi',
     venue: 'Guruvayoor Temple Auditorium',
     type: 'Arangettam',
-    description: 'Represented India in the World Dance Showcase with an original production "Nritya Shastra."',
+    description: 'Arangettam in Bharatanatyam. In the presence of Deity of Lord Sri Krishna of Guruvayoor',
     award: false,
   }
 ]
